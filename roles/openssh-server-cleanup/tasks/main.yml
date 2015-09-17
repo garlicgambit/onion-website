@@ -1,0 +1,26 @@
+---
+
+  # Do not use /var/lock dir because it is cleared on reboot on raspbian
+- name: Create lockfile to only pause for openssh cleanup on first ansible run
+  file: state=directory path=/root/ansible-openssh-server-cleanup.lock owner=root group=root mode=750
+  register: openssh_lockfile
+  tags: openssh-server-cleanup
+
+  # Pause for 20 seconds before removing openssh software
+- name: WARNING this will remove the openssh server and client!!!
+  pause: seconds=20
+  when: openssh_lockfile|changed
+  tags: openssh-server-cleanup
+
+  # Stop the openssh server - probably not smart to run this role on a remote system
+- name: WARNING this will stop the openssh server!!!
+  service: name=ssh state=stopped
+  tags: openssh-server-cleanup
+
+  # Remove the openssh server - probably not smart to run this role on a remote system
+- name: WARNING this will remove the openssh server and client!!!
+  apt: name={{ item }} state=absent
+  with_items:
+    - openssh-client
+    - openssh-server
+  tags: openssh-server-cleanup
