@@ -1,0 +1,4 @@
+---
+
+- name: reload system 
+  command: shutdown -r 1
