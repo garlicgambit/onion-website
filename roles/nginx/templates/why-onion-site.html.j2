@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+        <title>{{ item.value.server_name }}</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div id="header">
+<h1>Welcome to {{ item.value.server_name }}</h1>
+</div>
+
+<div id="nav">
+	<ul>
+		<li><a href="/">Home</a></li>
+		<li><a href="/gpg.html">PGP/GPG key</a></li>
+		<li><a href="/https-info.html">HTTPS</a></li>
+		<li><a href="/why-onion-site.html">Why an onion site</a></li>
+		<li><a href="/contact.html">Contact</a></li>
+	</ul>
+</div>
+
+<div id="section">
+<h2>Why run an Onion site?</h2>
+	<ul>
+		<li>All web traffic is encrypted by default.</li>
+		<li>It's pseudo-anonymous, for visitors (you) and webmasters (me).</li>
+		<li>It's censorship resistant.</li>
+		<li>There is no need to register a DNS name.</li>
+	</ul>
+
+<h2>Setup an Onion website yourself</h2>
+<p>To help setup an Onion website <a href="{{ garlic_homepage }}">Garlic Gambit</a> (clearnet link) has created an Ansible playbook which allows you to create a fairly decently secured .onion website yourself (caveat emptor).</p>
+
+<p>It is really basic by design. By default it will only serve a couple static HTML pages. The main reason for this is to keep it simple, fast and secure. With this basic setup you can use it to list some information about yourself or your organization. For instance contact information and services that you provide.</p>
+
+<h2>Why run a Garlic Gambit based Onion site?</h2>
+        <ul>
+                <li>It has all of the benefits of a regular .onion site and...</li>
+                <li>It's easy to setup and maintain.</li>
+                <li>It has a 5-10 minute install.</li>
+		<li>It runs on dedicated servers and VPS's, but also on Raspberry Pi's, BeagleBones and other cheap hardware.</li>
+                <li>It's based on free and open source software.</li>
+		<li>The code is released under a copyfree license. Consider it either in the public domain or under the MIT license. Choose whatever is accepted by you and/or is accepted in your jurisdiction.</li>
+		<li>And it can be used for accurate time setting by other Tor onion services (be a good neighbor).</li>
+        </ul>
+
+<h2>Benefits of running a self-hosted Onion site</h2>
+	<ul>
+		<li>No hosting company needed. You can run it from your own home.</li>
+		<li>It's cheap to setup, it runs on an old laptop, Raspberry Pi, Beaglebone, etc.</li>
+		<li>Control over encryption keys, because you control the hardware.</li>
+		<li>It's portable, you can take the server anywhere with you, connect it to a network and it will just work.</li>
+	</ul>
+
+<h2>Benefits of running an Onion site on a dedicated server or VPS</h2>
+	<ul>
+		<li>Higher network speeds.</li>
+		<li>Bigger bandwidth capacity.</li>
+		<li>Could provide more anonymity to the webmaster.</li>
+		<li>It works on a VPS, but... you have to assume that your encryption keys are compromised because you don't control the hardware.</li>
+	</ul>
+
+<h2>Want your own .onion website?</h2>
+
+<p>Checkout the Garlic Gambit <a href="{{ garlic_homepage }}">website</a> (clearnet link) for details about how to setup
+a .onion website yourself.</p>
+</div>
+
+<div id="footer">
+Powered by <a href="{{ garlic_homepage }}">Garlic Gambit</a> (clearnet link) - Bitcoin: {{ garlic_bitcoin }} - Monero: {{ garlic_monero }}
+</div>
+
+</body>
+</html>

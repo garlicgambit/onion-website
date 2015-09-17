@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">
+        <title>{{ item.value.server_name }}</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div id="header">
+<h1>Welcome to {{ item.value.server_name }}</h1>
+</div>
+
+<div id="nav">
+	<ul>
+		<li><a href="/">Home</a></li>
+		<li><a href="/gpg.html">PGP/GPG key</a></li>
+		<li><a href="/https-info.html">HTTPS</a></li>
+		<li><a href="/why-onion-site.html">Why an onion site</a></li>
+		<li><a href="/contact.html">Contact</a></li>
+	</ul>
+</div>
+
+<div id="section">
+<h2>HTTPS available</h2>
+
+<p>This site supports <a href="https://{{ item.value.server_name }}">https</a> communication. For an additional layer of security it is recommended that you switch to the https version of this website.</p>
+
+<h3>How to switch to the https site right now</h3>
+
+<p>Click on <a href="https://{{ item.value.server_name }}">this link</a> and accept the browser security warnings. That's it.</p>
+
+<h3>How switch more securely to the https site (recommended)</h3>
+<p>In order to switch more securely to the https site you need to verify the digital fingerprint of the SSL certificate. This fingerprint consists of a SHA1 or SHA256 hash. A SHA hash is in simple terms: a long string of characters. You need to verify that the SHA hash of the SSL certificate reported by your browser matches with the SHA hashes which are reported below.</p>
+
+<p>First you need to open the https version of this site. You do that by clicking on <a href="https://{{ item.value.server_name }}" target="_blank">this link</a>. This link will open a new tab in your browser.</p>
+
+<p>When you click on the link you will be prompted with a security warning and will be asked what to do. This is normal browser behavior because this site uses a self-signed SSL certificate. You now need to verify the SHA fingerprints/hashes of the certificate with the fingerprints which are listed below.</p>
+
+<p>Each browser has a different way to view the SSL certificate fingerprints. A per browser tutorial of how to exactly lookup the fingerprints is currently beyond the scope of this document. Do a quick search online or click through the browser warning menu and you have a good chance of finding them.</p>
+
+<h4>SSL certificate fingerprints</h4>
+
+<small> <b>SHA1:</b> {{ item.value.server_name_sha1_dotted }} </small> <br>
+<small> <b>SHA256:</b> {{ item.value.server_name_sha256_dotted }} </small>
+
+<p>You need to verify the SHA1 and/or the SHA256 fingerprint. For maximum security it is recommended that you verify the whole fingerprint. But if you just pick the first 10 and the last 10 characters of a fingerprint and they match you will be fine.</p>
+
+<p>After you have verified that the fingerprints match you can close the webpage with the http connection and start using the https version of this website.</p>
+
+<h3>SSL subdomains</h3>
+
+<p>Alternatively you can also use the SSL certificate fingerprints as subdomains. These are the only subdomains which are permitted on the server.</p>
+
+<p>You can use these subdomains in your communication with other people. The benefit of this is that they can immediately verify the https certificate and start using the https version of this site.</p>
+
+<p>The procedure is the same as described above. Only this time the SSL certificate fingerprints aren't formatted with colons ':', but are formatted as one long string. The person who receives the full link has to verify the SHA fingerprints of the certificate with the fingerprints which are used in the subdomain name. The subdomain is the part between 'https://' and the first dot. For example the SHA1 fingerprint subdomain for this website is: '{{ item.value.server_name_sha1 }}'.</p>
+
+<p>If the subdomain matches with what the browser reports as the SHA fingerprints then you can be fairly certain that you are connected to this server.</p>
+
+<p>
+Use these https subdomain urls in communications with other people:<br>
+<small> <b>SHA1:</b>
+<a href="https://{{ item.value.server_name_sha1 }}.{{ item.value.server_name }}/">
+https://{{ item.value.server_name_sha1 }}.{{ item.value.server_name }}</a></small><br>
+<small> <b>SHA256:</b>
+<a href="https://{{ item.value.server_name_sha256 }}.{{ item.value.server_name }}">https://{{ item.value.server_name_sha256 }}.{{ item.value.server_name }}</a></small>
+</p>
+
+<h3>Man in the middle attacks, GPG signatures and trust</h3>
+
+<p>Man in the Middle attacks can subvert the SSL certificate verification process. The webmaster can protect against that by signing the SSL certificate fingerprints with a PGP/GPG key. Then transfer the GPG key to the other party and have them check the SSL certificate fingerprints against that key. The problem is that the other party has to somehow verify that the GPG key belongs to the webmaster. And this process can also be subverted with Man in the Middle attacks. So this merely shifts the trust problem.</p>
+
+<p>If visitors can verify that the webmaster is the owner of a GPG key, then it is of added value to sign the SSL certificate fingerprints. Signing and verifying SSL certificate fingerprints is a fairly trivial process, but is currently beyond the scope of this document.</p>
+
+<h3>What if the fingerprints don't match</h3>
+
+<p>If the fingerprints don't match then something is wrong. This can be a minor mistake or a serious issue. Please get in touch with <a href="/contact.html">me</a> and state that you have a SSL fingerprint mismatch. This way steps can be taken to fix the problem.</p>
+</div>
+
+<div id="footer">
+Powered by <a href="{{ garlic_homepage }}">Garlic Gambit</a> (clearnet link) - Bitcoin: {{ garlic_bitcoin }} - Monero: {{ garlic_monero }}
+</div>
+
+</body>
+</html>

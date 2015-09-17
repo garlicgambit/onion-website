@@ -1,0 +1,7 @@
+---
+
+# Defaults for nginx
+
+garlic_homepage: "https://garlicgambit.wordpress.com"
+garlic_bitcoin: ""
+garlic_monero: ""
