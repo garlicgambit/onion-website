@@ -1,0 +1,110 @@
+---
+
+- name: Cleanup stock Debian packages
+  apt: name={{ item }} state=absent
+  with_items:
+    - discover
+    - discover-data
+    - dmidecode
+  tags: package-cleanup
+
+- name: Cleanup mail packages
+  apt: name={{ item }} state=absent
+  with_items:
+    - bsd-mailx
+    - exim4*
+    - mutt
+    - postfix
+    - sendmail
+  tags: package-cleanup
+
+- name: Cleanup network packages
+  apt: name={{ item }} state=absent
+  with_items:
+    - avahi-daemon
+    - curl
+    - ftp
+    - iputils-ping
+    - netcat-openbsd
+    - netcat-traditional
+    - nfs-common
+    - ntp
+    - rpcbind
+    - tcpd 
+    - telnet 
+    - traceroute
+    - wget
+  tags: cleanup-packages
+
+- name: Cleanup Raspbian packages
+  apt: name={{ item }} state=absent
+  with_items:
+    - cifs-utils
+    - cups-bsd
+    - cups-client
+    - cups-common
+    - desktop-base
+    - dillo
+    - epiphany-browser
+    - epiphany-browser-data
+    - galculator
+    - gnome-icon-theme
+    - gnome-themes-standard
+    - gnome-themes-standard-data
+    - gpicview 
+    - gstreamer1.0-alsa
+    - gstreamer1.0-omx
+    - gstreamer1.0-plugins-bad
+    - gstreamer1.0-plugins-base
+    - gstreamer1.0-plugins-good
+    - iputils-ping
+    - jackd
+    - jackd2
+    - java-common
+    - krb5-locales
+    - lightdm
+    - lightdm-gtk-greeter
+    - lxappearance
+    - lxde
+    - lxde-common
+    - lxde-icon-theme
+    - lxinput
+    - lxmenu-data
+    - lxpolkit
+    - lxrandr
+    - lxsession
+    - lxsession-edit
+    - lxshortcut
+    - lxterminal
+    - minecraft-pi
+    - netcat-openbsd
+    - netcat-traditional
+    - nfs-common
+    - ntp
+    - omxplayer
+    - openbox
+    - oracle-java8-jdk
+    - penguinspuzzle
+    - pistore
+    - python-minecraftpi
+    - python-picamera
+    - python3-picamera
+    - raspberrypi-artwork
+    - rpcbind
+    - rsync
+    - ruby1.9.1
+    - samba-common
+    - smartsim
+    - squeak-vm
+    - strace
+    - supercollider-common
+    - tcpd 
+    - timidity
+    - traceroute
+    - tsconf
+    - wireless-tools
+    - wolfram-engine
+    - wpagui
+    - xpdf
+    - xserver-common
+  tags: package-cleanup
