@@ -1,0 +1,6 @@
+---
+
+- name: Install apt-transport-tor
+  apt: name=apt-transport-tor state=installed
+  when: ansible_distribution_release == 'jessie'
+  tags: apt-transport-tor
