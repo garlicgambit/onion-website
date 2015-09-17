@@ -1,0 +1,19 @@
+---
+
+  # This is the pre-Tor installation iptables config
+  # This config is only used on first ansible run
+- name: Set iptables-pre-tor lockfile
+  file: state=directory path=/root/ansible-iptables-pre-tor.lock owner=root group=root mode=750
+  register: iptables_pre_tor_lockfile
+  tags: iptables-pre-tor
+
+- name: Deploy ipv4 iptables-pre-tor config
+  template: src=iptables.conf.j2 dest=/etc/iptables.conf owner=root group=root mode=640
+  when: iptables_pre_tor_lockfile|changed
+  register: iptables_pre_tor_config
+  tags: iptables-pre-tor
+
+- name: Reload iptables-pre-tor
+  shell: /sbin/iptables-restore < /etc/iptables.conf
+  when: iptables_pre_tor_config|changed
+  tags: iptables-pre-tor
