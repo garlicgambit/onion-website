@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# {{ ansible_managed }}
+
+# Restore ipv4 iptables configuration before interface is up
+/sbin/iptables-restore < /etc/iptables.conf

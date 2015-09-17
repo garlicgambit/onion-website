@@ -1,0 +1,6 @@
+---
+
+- name: Disable systemd timesyncd
+  file: path=/etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service state=absent
+  when: ansible_distribution_release == 'jessie'
+  tags: systemd

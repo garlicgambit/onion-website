@@ -1,0 +1,41 @@
+# {{ ansible_managed }}
+
+server {
+  listen {{ item.value.listen }};
+  listen {{ item.value.listen_ssl }};
+  server_name {{ item.value.server_name }} {{ item.value.server_name_sha1 }}.{{ item.value.server_name }} {{ item.value.server_name_sha256 }}.{{ item.value.server_name }};
+  root {{ item.value.root }};
+  index {{ item.value.index }};
+
+  # SSL
+  ssl_certificate /etc/nginx/ssl/{{ item.value.ssl_production }}.crt;
+  ssl_certificate_key /etc/nginx/ssl/{{ item.value.ssl_production }}.key;
+
+  # Set HSTS/STS header and let the client keep it for 10 days
+  add_header Strict-Transport-Security "max-age=864000";
+  
+  # Set HPKP header and let the client keep it for 10 days
+  # Using 3 HPKP keys
+  # 1. Production key
+  # 2. First backup key, in case something bad happens to the production key
+  # 3. Second backup key, in case something went wrong with replacing
+  #    the production key with the first backup key.
+  add_header Public-Key-Pins 'pin-sha256="{{ item.value.hpkp_server }}"; pin-sha256="{{ item.value.hpkp_server_backup }}"; pin-sha256="{{ item.value.hpkp_server_backup2 }}"; max-age=864000';
+
+  location / {
+  # Permit traffic from 127.0.0.1/Tor hidden service
+  allow 127.0.0.1;
+  # Deny all other traffic
+  deny all;
+  # Limit HTTP request methods - POST is not included by default
+  limit_except GET HEAD {
+    deny all;
+  }
+  # Limit bandwidth rate - disabled by default
+  #limit_rate_after 1m;
+  #limit_rate 5k;
+  #
+  # Limit requests - disabled by default - requires nginx-full
+  #limit_req zone=ratelimit burst=10 nodelay;
+  }
+}

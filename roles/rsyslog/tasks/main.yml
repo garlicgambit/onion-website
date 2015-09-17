@@ -1,0 +1,9 @@
+---
+
+- name: Stop rsyslog service
+  service: name=rsyslog state=stopped
+  tags: rsyslog
+
+- name: Remove rsyslog service
+  apt: name=rsyslog state=absent
+  tags: rsyslog

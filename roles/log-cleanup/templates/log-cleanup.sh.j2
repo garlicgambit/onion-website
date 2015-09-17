@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# Description:
+# Cleanup logs on the system
+#
+
+# {{ ansible_managed }}
+
+# Bash options
+set -o errexit # exit script when a command fails
+set -o nounset # exit script when a variable is not set
+
+# Clean all logs in /var/log
+find /var/log/ -type f -exec cp /dev/null {} \;
+
+# Clean all typed commands as user
+find /home/ -type f -name .bash_history -exec cp /dev/null {} \;
+
+# Clean all typed commands as root
+find /root/ -type f -name .bash_history -exec cp /dev/null {} \;
+
+# Clear dmesg buffer
+dmesg --clear

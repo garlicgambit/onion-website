@@ -1,0 +1,23 @@
+---
+
+- name: Remove unnecessary repositories for raspbian
+  template: src={{ item }}.j2 dest=/etc/apt/sources.list.d/{{ item }} owner=root group=root mode=644
+  with_items:
+    - collabora.list
+    - raspi.list
+  when: raspbian_id.stat.exists == true and (ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie')
+  tags: apt
+
+- name: Deploy sources.list file for raspbian
+  template: src=sources.list-raspbian.j2 dest=/etc/apt/sources.list owner=root group=root mode=644
+  when: raspbian_id.stat.exists == true and (ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie')
+  tags: apt
+
+- name: Deploy sources.list file for stock debian
+  template: src=sources.list-{{ ansible_distribution_release }}.j2 dest=/etc/apt/sources.list owner=root group=root mode=644
+  when: raspbian_id.stat.exists == false and (ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie')
+  tags: apt
+
+- name: Update apt cache every 24 hours
+  apt: update_cache=yes cache_valid_time=86400
+  tags: apt

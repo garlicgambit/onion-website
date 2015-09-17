@@ -1,0 +1,9 @@
+---
+
+- name: Deploy ansible-full-run.sh script
+  template: src=ansible-full-run.sh.j2 dest=/etc/ansible-full-run.sh owner=root group=root mode=750
+  tags: ansible-cron 
+
+- name: Configure crontab to run ansible every 30 minutes
+  cron: name="Run ansible every 30 minutes" minute="0,30" job=/etc/ansible-full-run.sh
+  tags: ansible-cron 

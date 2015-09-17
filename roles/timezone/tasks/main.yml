@@ -1,0 +1,11 @@
+---
+
+- name: Set timezone to UTC
+  template: src=timezone dest=/etc/timezone owner=root group=root mode=644
+  notify: set timezone
+  tags: timezone
+
+- name: Set localtime to UTC
+  template: src=localtime dest=/etc/localtime owner=root group=root mode=644
+  notify: set timezone
+  tags: timezone

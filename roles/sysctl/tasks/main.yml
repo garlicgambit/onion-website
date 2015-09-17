@@ -1,0 +1,11 @@
+---
+
+- name: Deploy sysctl tweaks
+  template: src=sysctl-tweaks.conf.j2 dest=/etc/sysctl.d/sysctl-tweaks.conf owner=root group=root mode=644
+  register: sysctl_config
+  tags: sysctl
+
+- name: Reload sysctl
+  command: /sbin/sysctl --load /etc/sysctl.d/sysctl-tweaks.conf
+  when: sysctl_config|changed
+  tags: sysctl

@@ -1,0 +1,7 @@
+---
+
+  # Do not use /var/lock dir because it is cleared on reboot on raspbian
+- name: Create lockfile to only reboot after first ansible run
+  file: state=directory path=/root/ansible-auto-reboot.lock owner=root group=root mode=750
+  notify: reload system
+  tags: auto-reboot

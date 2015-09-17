@@ -1,0 +1,9 @@
+---
+
+- name: Deploy log-cleanup.sh script
+  template: src=log-cleanup.sh.j2 dest=/etc/log-cleanup.sh owner=root group=root mode=750
+  tags: log-cleanup
+
+- name: Configure crontab to run log-cleanup.sh script every 24 hours
+  cron: name="Run log-cleanup.sh script every 24 hours" minute="15" hour="4" job=/etc/log-cleanup.sh
+  tags: log-cleanup

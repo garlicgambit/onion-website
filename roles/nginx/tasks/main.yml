@@ -1,0 +1,98 @@
+---
+
+# Install the light version of nginx
+- name: Install nginx-light
+  apt: name=nginx-light state=installed
+  tags: nginx
+
+# Install the full version of nginx - needed for nginx rate limiting
+#- name: Install nginx-full
+#  apt: name=nginx state=installed
+#  tags: nginx
+
+- name: Cleanup default nginx data
+  file: path=/var/www/html state=absent
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy nginx general configuration file
+  template: src=nginx.conf-{{ ansible_distribution_release }}.j2 dest=/etc/nginx/nginx.conf owner=root group=root mode=644
+  when: ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie'
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy nginx default vhost/server blocks configuration file
+  template: src=default.j2 dest=/etc/nginx/sites-available/default owner=root group=root mode=644
+  notify: reload nginx
+  tags: nginx
+
+- name: Create directories for vhosts/server blocks
+  file: state=directory dest=/var/www/{{ item.value.server_name }} owner=root group=root mode=755
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy vhosts/server block configuration
+  template: src=vhost.conf.j2 dest=/etc/nginx/sites-available/{{ item.value.server_name }}.conf owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Enable vhosts/server blocks
+  file: state=link src=/etc/nginx/sites-available/{{ item.value.server_name }}.conf dest=/etc/nginx/sites-enabled/{{ item.value.server_name }}.conf owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy style.css to vhosts/server blocks
+  template: src=style.css.j2 dest=/var/www/{{ item.value.server_name }}/style.css owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy index.html to vhosts/server blocks
+  template: src=index.html.j2 dest=/var/www/{{ item.value.server_name }}/index.html owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy gpg.html to vhosts/server blocks
+  template: src=gpg.html.j2 dest=/var/www/{{ item.value.server_name }}/gpg.html owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy https-info.html to vhosts/server blocks
+  template: src=https-info.html.j2 dest=/var/www/{{ item.value.server_name }}/https-info.html owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy why-onion-site.html to vhosts/server blocks
+  template: src=why-onion-site.html.j2 dest=/var/www/{{ item.value.server_name }}/why-onion-site.html owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Deploy contact.html to vhosts/server blocks
+  template: src=contact.html.j2 dest=/var/www/{{ item.value.server_name }}/contact.html owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Check if gpg key is available
+  stat: path={{ item.value.contact_gpg_file }}
+  with_dict: nginx_vhosts
+  register: gpg_key
+  tags: nginx
+
+- name: Deploy gpg key to vhosts/server blocks
+  copy: src={{ item.value.contact_gpg_file }} dest=/var/www/{{ item.value.server_name }}/gpg.pub owner=root group=root mode=644
+  with_dict: nginx_vhosts
+  when: gpg_key.results[0].stat.exists == True
+  notify: reload nginx
+  tags: nginx
+
+- name: Make sure nginx is running
+  service: name=nginx state=started
+  tags: nginx

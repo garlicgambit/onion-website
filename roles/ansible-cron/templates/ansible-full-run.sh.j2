@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Description:
+# Run ansible-playbook on the system
+#
+
+# Bash options
+set -o errexit # exit script when a command fails
+set -o nounset # exit script when a variable is not set
+
+/usr/bin/ansible-playbook /etc/ansible/localhost.yml

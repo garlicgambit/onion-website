@@ -1,0 +1,7 @@
+---
+
+  # Run after iptables to allow Tor traffic out
+- name: Wait for Tor to bootstrap for a maximum of 20 minutes
+  wait_for: path=/var/log/tor/log search_regex='Bootstrapped 100%' timeout=1200
+  when: tor_install|changed
+  tags: tor

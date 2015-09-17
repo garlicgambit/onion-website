@@ -1,0 +1,85 @@
+---
+
+- name: Create nginx directories
+  file: state=directory dest={{ item }} owner=root group=root mode=755
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/ssl
+  tags: openssl
+
+- name: Install openssl
+  apt: name=openssl state=installed
+  tags: openssl
+
+  # Generate 2048 bits dhparam file
+  # 4096 bits is more secure but takes long time to generate on old hardware
+- name: Generate unique dhparam for nginx - this might take a while
+  command: /usr/bin/openssl dhparam -out /etc/nginx/dhparam.pem 2048 creates=/etc/nginx/dhparam.pem
+  tags: openssl
+
+- name: Set correct permissions to dhparam file
+  file: path=/etc/nginx/dhparam.pem owner=root group=root mode=640
+  tags: openssl
+
+- name: Generate ssl private keys
+  command: /usr/bin/openssl genrsa -out /etc/nginx/ssl/{{ item }}.key 4096 creates=/etc/nginx/ssl/{{ item }}.key
+  with_items:
+    - server
+    - server-backup
+    - server-backup2
+    - localhost
+  tags: openssl
+
+- name: Set permissions ssl private keys
+  file: path=/etc/nginx/ssl/{{ item }}.key owner=root group=root mode=640
+  with_items:
+    - server
+    - server-backup
+    - server-backup2
+    - localhost
+  tags: openssl
+
+- name: Generate certificate sign requests
+  command: /usr/bin/openssl req -sha256 -new -key /etc/nginx/ssl/{{ item }}.key -out /etc/nginx/ssl/{{ item }}.csr -subj "/CN=*.{{ lookup('file', '/var/lib/tor/hidden_service/hostname') }}" creates=/etc/nginx/ssl/{{ item }}.csr
+  with_items:
+    - server
+    - server-backup
+    - server-backup2
+  tags: openssl
+
+- name: Generate certificate sign request for snakeoil cert
+  command: /usr/bin/openssl req -sha256 -new -key /etc/nginx/ssl/{{ item }}.key -out /etc/nginx/ssl/{{ item }}.csr -subj "/CN=localhost" creates=/etc/nginx/ssl/{{ item }}.csr
+  with_items:
+    - localhost
+  tags: openssl
+
+- name: Generate 10 year valid self-signed certificates
+  command: /usr/bin/openssl x509 -sha256 -req -days 3650 -in /etc/nginx/ssl/{{ item }}.csr -signkey /etc/nginx/ssl/{{ item }}.key -out /etc/nginx/ssl/{{ item }}.crt creates=/etc/nginx/ssl/{{ item }}.crt
+  with_items:
+    - server
+    - server-backup
+    - server-backup2
+    - localhost
+  tags: openssl
+
+- name: Create SHA fingerprints for server.crt certificate
+  shell: /usr/bin/openssl x509 -in /etc/nginx/ssl/server.crt -{{ item }} -noout -fingerprint | sed -e 's#^[^=]*=##' | sed -e 's#:##g' | sed -e 's#.*#\L&#' > /etc/nginx/ssl/{{ item }}-fingerprint-server-crt.txt creates=/etc/nginx/ssl/{{ item }}-fingerprint-server-crt.txt
+  with_items:
+    - sha1
+    - sha256
+  tags: openssl
+
+- name: Create dotted SHA fingerprints for server.crt certificate
+  shell: /usr/bin/openssl x509 -in /etc/nginx/ssl/server.crt -{{ item }} -noout -fingerprint | sed -e 's#^[^=]*=##' > /etc/nginx/ssl/{{ item }}-dotted-fingerprint-server-crt.txt creates=/etc/nginx/ssl/{{ item }}-dotted-fingerprint-server-crt.txt
+  with_items:
+    - sha1
+    - sha256
+  tags: openssl
+
+- name: Create HPKP base64 fingerprints for certificates
+  shell: /usr/bin/openssl x509 -pubkey -in /etc/nginx/ssl/{{ item }}.crt | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64 > /etc/nginx/ssl/hpkp-{{ item }}-crt.txt creates=/etc/nginx/ssl/hpkp-{{ item }}-crt.txt
+  with_items:
+    - server
+    - server-backup
+    - server-backup2
+  tags: openssl

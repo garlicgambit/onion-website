@@ -1,0 +1,89 @@
+# {{ ansible_managed }}
+
+user www-data;
+worker_processes {{ ansible_processor_vcpus }};
+pid /run/nginx.pid;
+
+events {
+	worker_connections 768;
+	# multi_accept on;
+}
+
+http {
+
+	##
+	# Basic Settings
+	##
+
+	sendfile on;
+	tcp_nopush on;
+	tcp_nodelay on;
+	keepalive_timeout 65;
+	types_hash_max_size 2048;
+	# Disable display nginx version
+	server_tokens off;
+
+	# server_names_hash_bucket_size 64;
+	server_names_hash_bucket_size 128;
+	# server_name_in_redirect off;
+
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
+
+	# Rate limiting - disabled by default, requires nginx-full
+#	limit_req_zone $binary_remote_addr zone=ratelimit:1m rate=5r/s;
+#	limit_req_status 444;
+
+	##
+	# SSL Settings
+	##
+
+	# Keep TLSv1 for remote tlsdate clients
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+	# Use cipher preferences from webserver
+	ssl_prefer_server_ciphers on;
+	# Small session timeout to improve privacy
+	ssl_session_timeout 1m;
+	# Small session cache to overwrite cached sessions to improve privacy
+	ssl_session_cache shared:SSL:1m;
+	# Disabled session tickets to improve privacy
+	ssl_session_tickets off;
+	# Use unique dhparam
+	ssl_dhparam /etc/nginx/dhparam.pem;
+        # Use strong ciphers with forward secrecy
+        # - AES or AESGCM with 128 or 256 bits
+        # - EDH or ECDHE
+	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH'; 
+
+	##
+	# Logging Settings
+	##
+
+	# Disabled access_log to enhance privacy
+#	access_log /var/log/nginx/access.log;
+	access_log none;
+	# Disabled error_log to enhance privacy
+#	error_log /var/log/nginx/error.log;
+	error_log none;
+
+	##
+	# Gzip Settings
+	##
+
+	gzip on;
+	gzip_disable "msie6";
+
+	# gzip_vary on;
+	# gzip_proxied any;
+	# gzip_comp_level 6;
+	# gzip_buffers 16 8k;
+	# gzip_http_version 1.1;
+	# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+	##
+	# Virtual Host Configs
+	##
+
+	include /etc/nginx/conf.d/*.conf;
+	include /etc/nginx/sites-enabled/*;
+}

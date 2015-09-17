@@ -1,0 +1,16 @@
+---
+
+- name: Deploy ipv4 iptables config
+  template: src=iptables-{{ ansible_distribution_release }}.conf.j2 dest=/etc/iptables.conf owner=root group=root mode=640
+  when: ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie'
+  register: iptables_config
+  tags: iptables
+
+- name: Reload iptables
+  shell: /sbin/iptables-restore < /etc/iptables.conf
+  when: iptables_config|changed
+  tags: iptables
+
+- name: Deploy iptables boot config
+  template: src=iptables-boot.j2 dest=/etc/network/if-pre-up.d/iptables-boot owner=root group=root mode=750
+  tags: iptables

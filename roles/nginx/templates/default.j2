@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+
+server {
+	listen 127.0.0.1:80 default_server;
+	listen 127.0.0.1:443 default_server;
+	# Deny access to any host other then the hidden_service hostname
+	server_name _;
+	# Drop connection
+	return 444;
+
+	# SSL
+	# Security by obscurity
+        # Deliver different certificate data to empty/random
+        # subdomains/hostnames. This might be helpful when
+        # running multiple vhosts/hidden services on same system.
+	ssl_certificate /etc/nginx/ssl/localhost.crt;
+	ssl_certificate_key /etc/nginx/ssl/localhost.key;
+}
