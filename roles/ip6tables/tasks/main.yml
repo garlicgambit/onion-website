@@ -1,0 +1,17 @@
+---
+
+  # Deploy ip6tables when ipv6 is available
+- name: Deploy ipv6 ip6tables config
+  template: src=ip6tables.conf.j2 dest=/etc/ip6tables.conf owner=root group=root mode=640
+  when: ansible_all_ipv6_addresses != []
+  register: ip6tables_config
+  tags: ip6tables
+
+- name: Reload ip6tables
+  shell: /sbin/ip6tables-restore < /etc/ip6tables.conf
+  when: ip6tables_config|changed
+
+- name: Deploy boot ipv6 ip6tables config
+  template: src=ip6tables-boot.j2 dest=/etc/network/if-pre-up.d/ip6tables-boot owner=root group=root mode=750
+  when: ansible_all_ipv6_addresses != []
+  tags: ip6tables

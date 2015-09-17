@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# {{ ansible_managed }}
+
+# Restore ipv6 ip6tables configuration before interface is up
+/sbin/ip6tables-restore < /etc/ip6tables.conf
