@@ -1,0 +1,53 @@
+---
+
+nginx_vhosts:
+  hidden_service1:
+    listen: '127.0.0.1:80'
+    listen_ssl: '127.0.0.1:443 ssl'
+    server_name: "{{ lookup('file', '/var/lib/tor/hidden_service/hostname') }}" 
+    server_name_sha1: "{{ lookup('file', '/etc/nginx/ssl/sha1-fingerprint-server-crt.txt') }}" 
+    server_name_sha256: "{{ lookup('file', '/etc/nginx/ssl/sha256-fingerprint-server-crt.txt') }}" 
+    server_name_sha1_dotted: "{{ lookup('file', '/etc/nginx/ssl/sha1-dotted-fingerprint-server-crt.txt') }}" 
+    server_name_sha256_dotted: "{{ lookup('file', '/etc/nginx/ssl/sha256-dotted-fingerprint-server-crt.txt') }}" 
+    root: /var/www/{{ lookup('file', '/var/lib/tor/hidden_service/hostname') }}
+    index: index.html
+    ssl_production: server
+    ssl_backup: server-backup
+    ssl_backup2: server-backup2
+    hpkp_server: "{{ lookup('file', '/etc/nginx/ssl/hpkp-server-crt.txt') }}"
+    hpkp_server_backup: "{{ lookup('file', '/etc/nginx/ssl/hpkp-server-backup-crt.txt') }}"
+    hpkp_server_backup2: "{{ lookup('file', '/etc/nginx/ssl/hpkp-server-backup2-crt.txt') }}"
+    contact_name: ''
+    contact_email: ''
+    contact_gpg_fingerprint: ''
+    contact_gpg_file: '/etc/ansible/roles/nginx/files/gpg.pub'
+    contact_pond: ''
+    contact_xmpp: ''
+    contact_otr: ''
+    contact_bitcoin: ''
+    contact_monero: ''
+#  hidden_service2:
+#    listen: '127.0.0.1:80'
+#    listen_ssl: '127.0.0.1:443 ssl'
+#    server_name:
+#    server_name_sha1:
+#    server_name_sha256:
+#    server_name_sha1_dotted:
+#    server_name_sha256_dotted:
+#    root:
+#    index: index.html
+#    ssl_production:
+#    ssl_backup:
+#    ssl_backup2:
+#    hpkp_server:
+#    hpkp_server_backup:
+#    hpkp_server_backup2:
+#    contact_name: ''
+#    contact_email: ''
+#    contact_gpg_fingerprint: ''
+#    contact_gpg_file: ''
+#    contact_pond: ''
+#    contact_xmpp: ''
+#    contact_otr: ''
+#    contact_bitcoin: ''
+#    contact_monero: ''
