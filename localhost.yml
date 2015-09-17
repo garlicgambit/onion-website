@@ -1,0 +1,26 @@
+---
+
+- hosts: localhost
+
+  roles:
+  - device-id
+  - iptables-pre-tor
+  - ip6tables
+  - timezone
+  - sysctl
+  - systemd
+  - openssh-server-cleanup # Comment out to keep openssh on the system
+  - rsyslog # Comment out to keep rsyslog on the system
+  - package-cleanup
+  - random-mac # Will only be installed on non-virtualized systems
+  - tor
+  - apt-transport-tor
+  - iptables
+  - tor-bootstrap
+  - apt
+  - unattended-upgrades
+  - openssl
+  - nginx
+  - log-cleanup
+  - ansible-cron
+  - auto-reboot # Comment out to prevent system to reboot on first ansible run
