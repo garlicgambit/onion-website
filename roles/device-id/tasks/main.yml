@@ -1,0 +1,7 @@
+---
+
+  # Quick and dirty way to check if system is running raspbian
+- name: Check if device is running raspbian
+  stat: path=/etc/dpkg/origins/raspbian
+  register: raspbian_id
+  tags: device-id
