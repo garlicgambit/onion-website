@@ -1,0 +1,29 @@
+---
+
+- name: Install Tor
+  apt: name=tor state=installed
+  register: tor_install
+  tags: tor
+
+  # Reload Tor immediately upon torrc configuration changes
+  # An ansible handler runs to late to configure a hidden service
+  # for openssl cert and nginx vhost configuration
+- name: Deploy Tor configuration file
+  template: src=torrc-{{ ansible_distribution_release }}.j2 dest=/etc/tor/torrc owner=root group=root mode=644
+  when: ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'jessie'
+  register: torrc_config
+  tags: tor
+
+- name: Make sure Tor is running
+  service: name=tor state=started
+  tags: tor
+
+- name: Reload Tor
+  service: name=tor state=reloaded
+  when: torrc_config|changed
+  tags: tor
+
+- name: Pause 30 seconds for creation hidden service
+  pause: seconds=30
+  when: torrc_config|changed
+  tags: tor
