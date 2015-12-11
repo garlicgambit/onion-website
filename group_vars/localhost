@@ -1,5 +1,7 @@
 ---
 
+internet_interface: "eth0"
+
 nginx_vhosts:
   hidden_service1:
     listen: '127.0.0.1:80'
