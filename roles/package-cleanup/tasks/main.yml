@@ -30,13 +30,38 @@
     - nfs-common
     - ntp
     - rpcbind
-    - tcpd 
-    - telnet 
+    - tcpd
+    - telnet
     - traceroute
     - wget
   tags: cleanup-packages
 
-- name: Cleanup Raspbian packages
+- name: Cleanup Raspbian Jessie Lite packages
+  apt: name={{ item }} state=absent
+  with_items:
+    - bind9utils
+    - binutils
+    - build-essential
+    - ccp
+    - ccp-4.9
+    - cifs-utils
+    - crda
+    - curl
+    - dhcpcd5
+    - krb5-locales
+    - make
+    - netcat-openbsd
+    - netcat-traditional
+    - nfs-common
+    - ntp
+    - rpcbind
+    - samba-common
+    - strace
+    - tcpd
+    - traceroute
+  tags: package-cleanup
+
+- name: Cleanup Beaglebone packages
   apt: name={{ item }} state=absent
   with_items:
     - cifs-utils
@@ -51,7 +76,7 @@
     - gnome-icon-theme
     - gnome-themes-standard
     - gnome-themes-standard-data
-    - gpicview 
+    - gpicview
     - gstreamer1.0-alsa
     - gstreamer1.0-omx
     - gstreamer1.0-plugins-bad
@@ -76,7 +101,6 @@
     - lxsession-edit
     - lxshortcut
     - lxterminal
-    - minecraft-pi
     - netcat-openbsd
     - netcat-traditional
     - nfs-common
@@ -85,11 +109,6 @@
     - openbox
     - oracle-java8-jdk
     - penguinspuzzle
-    - pistore
-    - python-minecraftpi
-    - python-picamera
-    - python3-picamera
-    - raspberrypi-artwork
     - rpcbind
     - rsync
     - ruby1.9.1
@@ -98,12 +117,10 @@
     - squeak-vm
     - strace
     - supercollider-common
-    - tcpd 
+    - tcpd
     - timidity
     - traceroute
     - tsconf
-    - wireless-tools
-    - wolfram-engine
     - wpagui
     - xpdf
     - xserver-common

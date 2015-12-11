@@ -1,0 +1,6 @@
+---
+
+# Defaults for openssl
+
+openssl_dhparam_size: "2048" # Recommended values: 2048, 3072 or 4096
+openssl_key_size: "4096" # Recommended values: 2048, 3072 or 4096

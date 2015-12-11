@@ -5,3 +5,14 @@
 garlic_homepage: "https://garlicgambit.wordpress.com"
 garlic_bitcoin: "16MHi1vRjvSnuqX1iv9jndvh8kCLSinCUw"
 garlic_monero: "463DQj1ebHSWrsyuFTfHSTDaACx3WZtmMFMwb6QEX7asGyUBaRe2fHbhMchpZnaQ6XKXcHZLq8Vt1BRSLpbqdr283QinCRK"
+
+nginx_ssl_protocol: "TLSv1 TLSv1.1 TLSv1.2" # Keep TLSv1 to support tlsdate
+nginx_ssl_ciphers: "AESGCM+EECDH:AESGCM+EDH:AES256+EECDH:AES256+EDH"
+
+nginx_owner: "www-data"
+nginx_group: "www-data"
+
+nginx_access_log: "none" # Disables access logging
+#nginx_access_log: "/var/log/nginx/access.log" # Enables access logging
+nginx_error_log: "none" # Disables error logging
+#nginx_error_log: "/var/log/nginx/error.log" # Enables error logging

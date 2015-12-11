@@ -6,6 +6,11 @@
   register: iptables_config
   tags: iptables
 
+- name: Flush iptables NAT rules before loading iptables rules
+  command: /sbin/iptables -t nat -F
+  when: iptables_config|changed
+  tags: iptables
+
 - name: Reload iptables
   shell: /sbin/iptables-restore < /etc/iptables.conf
   when: iptables_config|changed
