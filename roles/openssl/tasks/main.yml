@@ -11,18 +11,22 @@
   apt: name=openssl state=installed
   tags: openssl
 
-  # Generate 2048 bits dhparam file
+  # Generate dhparam file with at least 2048 bits
   # 4096 bits is more secure but takes long time to generate on old hardware
 - name: Generate unique dhparam for nginx - this might take a while
-  command: /usr/bin/openssl dhparam -out /etc/nginx/dhparam.pem 2048 creates=/etc/nginx/dhparam.pem
+  command: /usr/bin/openssl dhparam -out /etc/{{ item }}/dhparam.pem {{ openssl_dhparam_size }} creates=/etc/{{ item }}/dhparam.pem
+  with_items:
+    - nginx
   tags: openssl
 
-- name: Set correct permissions to dhparam file
-  file: path=/etc/nginx/dhparam.pem owner=root group=root mode=640
+- name: Set correct permissions to dhparam file for nginx
+  file: path=/etc/{{ item }}/dhparam.pem owner=root group=root mode=640
+  with_items:
+    - nginx
   tags: openssl
 
-- name: Generate ssl private keys
-  command: /usr/bin/openssl genrsa -out /etc/nginx/ssl/{{ item }}.key 4096 creates=/etc/nginx/ssl/{{ item }}.key
+- name: Generate ssl private keys for nginx
+  command: /usr/bin/openssl genrsa -out /etc/nginx/ssl/{{ item }}.key {{ openssl_key_size }} creates=/etc/nginx/ssl/{{ item }}.key
   with_items:
     - server
     - server-backup
@@ -39,7 +43,7 @@
     - localhost
   tags: openssl
 
-- name: Generate certificate sign requests
+- name: Generate certificate sign requests for nginx
   command: /usr/bin/openssl req -sha256 -new -key /etc/nginx/ssl/{{ item }}.key -out /etc/nginx/ssl/{{ item }}.csr -subj "/CN=*.{{ lookup('file', '/var/lib/tor/hidden_service/hostname') }}" creates=/etc/nginx/ssl/{{ item }}.csr
   with_items:
     - server
@@ -53,7 +57,7 @@
     - localhost
   tags: openssl
 
-- name: Generate 10 year valid self-signed certificates
+- name: Generate 10 year valid self-signed certificates for nginx
   command: /usr/bin/openssl x509 -sha256 -req -days 3650 -in /etc/nginx/ssl/{{ item }}.csr -signkey /etc/nginx/ssl/{{ item }}.key -out /etc/nginx/ssl/{{ item }}.crt creates=/etc/nginx/ssl/{{ item }}.crt
   with_items:
     - server
@@ -69,7 +73,7 @@
     - sha256
   tags: openssl
 
-- name: Create dotted SHA fingerprints for server.crt certificate
+- name: Create dotted SHA fingerprints for server.crt certificate for nginx
   shell: /usr/bin/openssl x509 -in /etc/nginx/ssl/server.crt -{{ item }} -noout -fingerprint | sed -e 's#^[^=]*=##' > /etc/nginx/ssl/{{ item }}-dotted-fingerprint-server-crt.txt creates=/etc/nginx/ssl/{{ item }}-dotted-fingerprint-server-crt.txt
   with_items:
     - sha1
