@@ -1,0 +1,5 @@
+---
+
+- name: Install haveged
+  apt: name=haveged state=installed
+  tags: haveged
