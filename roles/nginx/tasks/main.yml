@@ -27,7 +27,13 @@
   tags: nginx
 
 - name: Create directories for vhosts/server blocks
-  file: state=directory dest=/var/www/{{ item.value.server_name }} owner=root group=root mode=755
+  file: state=directory dest=/var/www/{{ item.value.server_name }} owner={{ nginx_owner }} group={{ nginx_group }} mode=750
+  with_dict: nginx_vhosts
+  notify: reload nginx
+  tags: nginx
+
+- name: Set file owner and group on directories for vhosts/server blocks
+  file: state=directory recurse=yes dest=/var/www/{{ item.value.server_name }} owner={{ nginx_owner }} group={{ nginx_group }}
   with_dict: nginx_vhosts
   notify: reload nginx
   tags: nginx
@@ -45,37 +51,37 @@
   tags: nginx
 
 - name: Deploy style.css to vhosts/server blocks
-  template: src=style.css.j2 dest=/var/www/{{ item.value.server_name }}/style.css owner=root group=root mode=644
+  template: src=style.css.j2 dest=/var/www/{{ item.value.server_name }}/style.css owner={{ nginx_owner }} group={{ nginx_owner }} mode=440
   with_dict: nginx_vhosts
   notify: reload nginx
   tags: nginx
 
 - name: Deploy index.html to vhosts/server blocks
-  template: src=index.html.j2 dest=/var/www/{{ item.value.server_name }}/index.html owner=root group=root mode=644
+  template: src=index.html.j2 dest=/var/www/{{ item.value.server_name }}/index.html owner={{ nginx_owner }} group={{ nginx_group }} mode=440
   with_dict: nginx_vhosts
   notify: reload nginx
   tags: nginx
 
 - name: Deploy gpg.html to vhosts/server blocks
-  template: src=gpg.html.j2 dest=/var/www/{{ item.value.server_name }}/gpg.html owner=root group=root mode=644
+  template: src=gpg.html.j2 dest=/var/www/{{ item.value.server_name }}/gpg.html owner={{ nginx_owner }} group={{ nginx_group }} mode=440
   with_dict: nginx_vhosts
   notify: reload nginx
   tags: nginx
 
 - name: Deploy https-info.html to vhosts/server blocks
-  template: src=https-info.html.j2 dest=/var/www/{{ item.value.server_name }}/https-info.html owner=root group=root mode=644
+  template: src=https-info.html.j2 dest=/var/www/{{ item.value.server_name }}/https-info.html owner={{ nginx_owner }} group={{ nginx_group }} mode=440
   with_dict: nginx_vhosts
   notify: reload nginx
   tags: nginx
 
 - name: Deploy why-onion-site.html to vhosts/server blocks
-  template: src=why-onion-site.html.j2 dest=/var/www/{{ item.value.server_name }}/why-onion-site.html owner=root group=root mode=644
+  template: src=why-onion-site.html.j2 dest=/var/www/{{ item.value.server_name }}/why-onion-site.html owner={{ nginx_owner }} group={{ nginx_group }} mode=440
   with_dict: nginx_vhosts
   notify: reload nginx
   tags: nginx
 
 - name: Deploy contact.html to vhosts/server blocks
-  template: src=contact.html.j2 dest=/var/www/{{ item.value.server_name }}/contact.html owner=root group=root mode=644
+  template: src=contact.html.j2 dest=/var/www/{{ item.value.server_name }}/contact.html owner={{ nginx_owner }} group={{ nginx_group }} mode=440
   with_dict: nginx_vhosts
   notify: reload nginx
   tags: nginx
@@ -87,7 +93,7 @@
   tags: nginx
 
 - name: Deploy gpg key to vhosts/server blocks
-  copy: src={{ item.value.contact_gpg_file }} dest=/var/www/{{ item.value.server_name }}/gpg.pub owner=root group=root mode=644
+  copy: src={{ item.value.contact_gpg_file }} dest=/var/www/{{ item.value.server_name }}/gpg.pub owner={{ nginx_owner }} group={{ nginx_group }} mode=440
   with_dict: nginx_vhosts
   when: gpg_key.results[0].stat.exists == True
   notify: reload nginx

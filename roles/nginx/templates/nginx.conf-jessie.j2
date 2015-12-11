@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-user www-data;
+user {{ nginx_owner }};
 worker_processes {{ ansible_processor_vcpus }};
 pid /run/nginx.pid;
 
@@ -30,6 +30,23 @@ http {
 	include /etc/nginx/mime.types;
 	default_type application/octet-stream;
 
+	##
+	# Global Access Control
+	##
+
+	# Permit traffic from 127.0.0.1/Tor hidden service
+	allow 127.0.0.1;
+	# Deny all other traffic
+	deny all;
+
+	##
+	# Global Rate Limiting
+	##
+
+	# Limit bandwidth rate - disabled by default
+#	limit_rate_after 1m;
+#	limit_rate 5k;
+
 	# Rate limiting - disabled by default, requires nginx-full
 #	limit_req_zone $binary_remote_addr zone=ratelimit:1m rate=5r/s;
 #	limit_req_status 444;
@@ -39,7 +56,7 @@ http {
 	##
 
 	# Keep TLSv1 for remote tlsdate clients
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+	ssl_protocols {{ nginx_ssl_protocol }}; # Dropping SSLv3, ref: POODLE
 	# Use cipher preferences from webserver
 	ssl_prefer_server_ciphers on;
 	# Small session timeout to improve privacy
@@ -53,18 +70,16 @@ http {
         # Use strong ciphers with forward secrecy
         # - AES or AESGCM with 128 or 256 bits
         # - EDH or ECDHE
-	ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH'; 
+	ssl_ciphers '{{ nginx_ssl_ciphers }}';
 
 	##
 	# Logging Settings
 	##
 
 	# Disabled access_log to enhance privacy
-#	access_log /var/log/nginx/access.log;
-	access_log none;
+	access_log {{ nginx_access_log }};
 	# Disabled error_log to enhance privacy
-#	error_log /var/log/nginx/error.log;
-	error_log none;
+	error_log {{ nginx_error_log }};
 
 	##
 	# Gzip Settings
