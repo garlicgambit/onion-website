@@ -61,7 +61,7 @@
     - traceroute
   tags: package-cleanup
 
-- name: Cleanup Beablebone packages
+- name: Cleanup Beaglebone packages
   apt: name={{ item }} state=absent
   with_items:
     - cifs-utils
