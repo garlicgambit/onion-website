@@ -40,7 +40,7 @@
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 ### Permit incoming SSH traffic - disabled by default ###
-#-A INPUT -i eth0 -p tcp -m tcp --dport 22 --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -m limit --limit 1/m --limit-burst 5 -j ACCEPT
+#-A INPUT -i {{ internet_interface }} -p tcp -m tcp --dport 22 --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -m limit --limit 1/m --limit-burst 5 -j ACCEPT
 
 ### Logging - disabled by default ###
 #-A INPUT -j LOG
@@ -62,13 +62,13 @@
 -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 ### Permit DNS traffic ###
--A OUTPUT -o eth0 -p udp -m udp --dport 53 -m state --state NEW -m owner --uid-owner 0 -j ACCEPT
+-A OUTPUT -o {{ internet_interface }} -p udp -m udp --dport 53 -m state --state NEW -m owner --uid-owner 0 -j ACCEPT
 
 ### Permit DHCP traffic ###
--A OUTPUT -o eth0 -p udp -m udp --dport 67 -m state --state NEW -m owner --uid-owner 0 -j ACCEPT
+-A OUTPUT -o {{ internet_interface }} -p udp -m udp --dport 67 -m state --state NEW -m owner --uid-owner 0 -j ACCEPT
 
 ### Permit HTTP/apt traffic ###
--A OUTPUT -o eth0 -p tcp -m tcp --dport 80 --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -m owner --uid-owner 0 -j ACCEPT
+-A OUTPUT -o {{ internet_interface }} -p tcp -m tcp --dport 80 --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -m owner --uid-owner 0 -j ACCEPT
 
 ### Logging - disabled by default ###
 #-A OUTPUT -j LOG
