@@ -13,7 +13,7 @@ net.ipv6.conf.all.accept_redirects = 0
 # Accept ICMP redirects only for gateways listed in our default
 # gateway list (enabled by default)
 # Note: set to disabled
-net.ipv4.conf.all.secure_redirects = 0 
+net.ipv4.conf.all.secure_redirects = 0
 
 # Do not send ICMP redirects (we are not a router)
 net.ipv4.conf.all.send_redirects = 0
@@ -26,7 +26,7 @@ net.ipv6.conf.all.accept_source_route = 0
 net.ipv6.conf.all.disable_ipv6=1
 net.ipv6.conf.default.disable_ipv6=1
 net.ipv6.conf.lo.disable_ipv6=1
-net.ipv6.conf.eth0.disable_ipv6=1
+net.ipv6.conf.{{ internet_interface }}.disable_ipv6=1
 
 # Disable dmesg access for normal user
 kernel.dmesg_restrict=1
