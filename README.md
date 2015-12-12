@@ -78,17 +78,18 @@
 
 3. Clone the git repository
     ```
+    sudo mv /etc/ansible /etc/ansible-orig
     sudo git clone https://github.com/garlicgambit/onion-website.git /etc/ansible
     ```
 
 4. Set the correct time on the system for UTC 0
     ```
-    sudo date -s “dd mmm yyyy hh:mm:ss”
+    sudo date -s "dd mmm yyyy hh:mm:ss"
     ```
 
     Example:
     ```
-    sudo date -s “01 Jan 2014 14:30:00”
+    sudo date -s "01 Jan 2014 14:30:00"
     ```
 
 5. Go to the Ansible configuration directory
